@@ -1,4 +1,4 @@
-# Pricing and Prompts (Sessions 10–12)
+# Pricing and Prompts
 
 ## A. Pricing Research
 - **Date of research:** 2025-10-13  
