@@ -1,8 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {useState} from 'react'
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+      username: '',
+      password: '',
+      formstate: false
+    });
 
   function handleSignUpNav(e) {
     e.preventDefault(); // prevent form submission
