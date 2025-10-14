@@ -16,7 +16,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500">
+    <div className="min-h-screen flex items-center justify-center bg-[url('assets/brick.jpg')] bg-cover bg-center">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Account
@@ -39,7 +39,7 @@ const Signup = () => {
           />
           <button
             onClick={handleSignup}
-            className="bg-pink-500 text-white py-3 rounded-lg hover:bg-pink-600 transition-colors"
+            className="bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition-colors"
           >
             Sign Up
           </button>
@@ -47,7 +47,7 @@ const Signup = () => {
             Already have an account?{" "}
             <button
               onClick={handleLoginNav}
-              className="text-pink-500 font-semibold hover:underline"
+              className="text-red-500 font-semibold hover:underline"
             >
               Login
             </button>

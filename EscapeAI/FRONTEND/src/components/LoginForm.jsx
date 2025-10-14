@@ -16,7 +16,7 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600">
+    <div className="min-h-screen flex items-center justify-center bg-[url('assets/brick.jpg')] bg-cover bg-center">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Game Login
@@ -34,7 +34,7 @@ const LoginForm = () => {
           />
           <button
             onClick={handleLogin}
-            className="bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600 transition-colors"
+            className="bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition-colors"
           >
             Login
           </button>
@@ -42,7 +42,7 @@ const LoginForm = () => {
             Don't have an account?{" "}
             <button
               onClick={handleSignUpNav}
-              className="text-indigo-500 font-semibold hover:underline"
+              className="text-red-500 font-semibold hover:underline"
             >
               Sign Up
             </button>
@@ -54,4 +54,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
