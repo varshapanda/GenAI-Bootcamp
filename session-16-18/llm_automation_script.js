@@ -107,18 +107,3 @@ async function callLLM() {
 // Execute the function
 callLLM();
 
-// curl "" \
-//   -H 'Content-Type: application/json' \
-//   -H 'X-goog-api-key: AIzaSyClNGgePocqHAVTkT56-Q047p7EhvQLWsw' \
-//   -X POST \
-//   -d '{
-//     "contents": [
-//       {
-//         "parts": [
-//           {
-//             "text": "Explain how AI works in a few words"
-//           }
-//         ]
-//       }
-//     ]
-//   }'
