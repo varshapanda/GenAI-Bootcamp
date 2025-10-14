@@ -1,0 +1,6 @@
+Full Name,user_email,age,price,Location 
+(City/Country),signup_date,tags,notes
+"alice Wonderland",alice@example.com,'28',"price: $59.99","New York / USA",12-Mar-2024,"new, popular",First user
+bob Smith,,35,INR 2500,London / UK,2024/04/01,premium,"Paid via CC"
+charlie Brown,charlie@example.com,42,Free,Paris / France,05-May-2024,,
+"dave Davis",d.davis@work.net,'21',"$150",,"June 1st, 2024",active,

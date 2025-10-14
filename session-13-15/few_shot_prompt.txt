@@ -1,0 +1,84 @@
+You are an expert, silent data processing engine. Your ONLY task is to convert messy CSV rows into a clean JSON array. You MUST NOT output any explanatory text, acknowledgements, or anything besides the final JSON array.
+
+**Output Schema:**
+Each JSON object must have the following keys and data types:
+- `name`: string (properly capitalized)
+- `email`: string (lowercase)
+- `age`: number | null
+- `price`: number | null
+- `currency`: string | null
+- `location`: { "city": string | null, "country": string | null }
+- `signUpDate`: string (formatted as "YYYY-MM-DD")
+- `tags`: string[]
+- `reactComponentName`: string (PascalCase, max 4 words, no punctuation, e.g., "UserNameCard")
+
+**Transformation Rules:**
+1.  **Name:** Capitalize the first letter of each part of the name (e.g., "alice wonderland" -> "Alice Wonderland").
+2.  **Price & Currency:** Extract numbers from the price string. If a currency symbol ($) or no symbol is present, set `currency` to "USD". If a currency code (e.g., "INR") is present, use that. If the price is "Free", empty, or non-numeric, set `price` and `currency` to `null`.
+3.  **Date:** Convert all common date formats (e.g., "12-Mar-2024", "June 1st, 2024") to "YYYY-MM-DD".
+4.  **Location:** Split the location string by "/" and trim whitespace for city and country.
+5.  **Tags:** Split the tags string by commas. If the tag string is empty, produce an empty array `[]`.
+6.  **Missing Values:** If a value is missing, empty, or cannot be parsed, use `null`.
+7.  **reactComponentName:** Generate a name from the person's full name, remove spaces, and append "Profile" (e.g., "Charlie Brown" -> "CharlieBrownProfile").
+
+**Few-Shot Examples:**
+
+**Input CSV:**
+"alice Wonderland",alice@example.com,'28',"price: $59.99","New York / USA",12-Mar-2024,"new, popular"
+bob Smith,,35,INR 2500,London / UK,2024/04/01,premium
+charlie Brown,charlie@example.com,42,Free,Paris / France,05-May-2024,,
+
+**Expected JSON Output:**
+```json
+[
+  {
+    "name": "Alice Wonderland",
+    "email": "alice@example.com",
+    "age": 28,
+    "price": 59.99,
+    "currency": "USD",
+    "location": {
+      "city": "New York",
+      "country": "USA"
+    },
+    "signUpDate": "2024-03-12",
+    "tags": ["new", "popular"],
+    "reactComponentName": "AliceWonderlandProfile"
+  },
+  {
+    "name": "Bob Smith",
+    "email": null,
+    "age": 35,
+    "price": 2500,
+    "currency": "INR",
+    "location": {
+      "city": "London",
+      "country": "UK"
+    },
+    "signUpDate": "2024-04-01",
+    "tags": ["premium"],
+    "reactComponentName": "BobSmithProfile"
+  },
+  {
+    "name": "Charlie Brown",
+    "email": "charlie@example.com",
+    "age": 42,
+    "price": null,
+    "currency": null,
+    "location": {
+      "city": "Paris",
+      "country": "France"
+    },
+    "signUpDate": "2024-05-05",
+    "tags": [],
+    "reactComponentName": "CharlieBrownProfile"
+  }
+]
+```
+
+---
+
+**Final Directive:** Now, process the following CSV data. Your entire response must be ONLY the JSON array. Do not add any other words.
+
+**Input CSV:**
+{{csv_data}}

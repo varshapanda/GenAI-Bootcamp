@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Alice Wonderland",
+    "email": "alice@example.com",
+    "age": 28,
+    "price": 59.99,
+    "currency": "USD",
+    "location": {
+      "city": "New York",
+      "country": "USA"
+    },
+    "signUpDate": "2024-03-12",
+    "tags": [
+      "new",
+      "popular"
+    ],
+    "reactComponentName": "AliceWonderlandProfile"
+  },
+  {
+    "name": "Bob Smith",
+    "email": null,
+    "age": 35,
+    "price": 2500.00,
+    "currency": "INR",
+    "location": {
+      "city": "London",
+      "country": "UK"
+    },
+    "signUpDate": "2024-04-01",
+    "tags": [
+      "premium"
+    ],
+    "reactComponentName": "BobSmithProfile"
+  },
+  {
+    "name": "Charlie Brown",
+    "email": "charlie@example.com",
+    "age": 42,
+    "price": null,
+    "currency": null,
+    "location": {
+      "city": "Paris",
+      "country": "France"
+    },
+    "signUpDate": "2024-05-05",
+    "tags": [],
+    "reactComponentName": "CharlieBrownProfile"
+  },
+  {
+    "name": "Dave Davis",
+    "email": "d.davis@work.net",
+    "age": 21,
+    "price": 150.00,
+    "currency": "USD",
+    "location": {
+      "city": null,
+      "country": null
+    },
+    "signUpDate": "2024-06-01",
+    "tags": [
+      "active"
+    ],
+    "reactComponentName": "DaveDavisProfile"
+  }
+]
