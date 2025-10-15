@@ -4,11 +4,8 @@ import {useState} from 'react'
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    formstate: false
-  });
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
 
   function handleLoginNav(e) {
@@ -22,30 +19,45 @@ const Signup = () => {
     console.log("Signup function placeholder");
   }
 
+  function handleSignupp(e) {
+    e.preventDefault();
+    const userData = { username, password };
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    alert("Signup successful! You can now login.");
+    navigate("/login");
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[url('assets/brick.jpg')] bg-cover bg-center">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Account
         </h2>
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleSignupp} className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="Username"
             className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            value={username}
+          onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="email"
             placeholder="Email"
             className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            
           />
           <input
             type="password"
             placeholder="Password"
             className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            value={password}
+          onChange={(e) => setPassword(e.target.value)}
           />
           <button
-            onClick={handleSignup}
+            onClick={handleSignupp}
+            type="submit"
             className="bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition-colors"
           >
             Sign Up
