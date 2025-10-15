@@ -1,23 +1,16 @@
-import React from "react"
-import LoginForm from "./components/LoginForm"
-import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
-import { useNavigate } from "react-router-dom";
-import Signup from "./components/SignUp";
-import MainMenu from "./components/MainMenu";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/LandingPage";
+import GoogleAuth from "./components/authentication/Auth";
+
 function App() {
-  
-  
-  return(
-  <BrowserRouter>
-  <Routes>
-    <Route index='/EscapeAI' element={<Landing/>}/>
-    <Route path="/Login" element={<LoginForm/>}/>
-    <Route path='/signup' element={<Signup/>}/>
-     <Route path="/Menu" element={<MainMenu/>}/>
-  </Routes>
-  </BrowserRouter>
-  )
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/auth" element={<GoogleAuth />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
