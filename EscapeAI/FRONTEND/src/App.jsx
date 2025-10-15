@@ -4,13 +4,14 @@ import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import Signup from "./components/SignUp";
 import MainMenu from "./components/MainMenu";
+import Landing from "./components/LandingPage";
 function App() {
   
   
   return(
   <BrowserRouter>
   <Routes>
-    <Route index='/Login' element={<LoginForm/>}/>
+    <Route index='/EscapeAI' element={<Landing/>}/>
     <Route path="/Login" element={<LoginForm/>}/>
     <Route path='/signup' element={<Signup/>}/>
      <Route path="/Menu" element={<MainMenu/>}/>
