@@ -1,15 +1,24 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const connectDatabase = require("./config/database.js");
+const authRoutes = require("./routes/authRoutes.js");
+
 
 app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+}));
 connectDatabase();
 
 
 app.get("/", (req, res)=>{
     res.status(200).send("Welcome to EscapeAI Backend");
 })
-
+app.use("/auth", authRoutes);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
