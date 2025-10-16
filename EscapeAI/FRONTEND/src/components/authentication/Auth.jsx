@@ -21,6 +21,7 @@ const GoogleAuth = () => {
       
       localStorage.setItem("accessToken", accessToken);
       console.log("Login successful:", user);
+      
     } catch (err) {
       setError(err.message || "Authentication failed");
     } finally {
