@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "../../api/axios";
 import { Chrome, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const GoogleAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate=useNavigate()
 
   const handleGoogleLogin = async (credentialResponse) => {
     setLoading(true);
@@ -21,6 +23,8 @@ const GoogleAuth = () => {
       
       localStorage.setItem("accessToken", accessToken);
       console.log("Login successful:", user);
+      navigate("/RoomSelect")
+
     } catch (err) {
       setError(err.message || "Authentication failed");
     } finally {
