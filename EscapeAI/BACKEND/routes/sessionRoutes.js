@@ -16,3 +16,4 @@ router.post("/end", authMiddleware, endGameSession);
 router.get("/history/all", authMiddleware, getAllUserSessions);
 
 module.exports = router
+
