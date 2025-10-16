@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDatabase = require("./config/database.js");
 const authRoutes = require("./routes/authRoutes.js");
 const gameSessionRoutes = require("./routes/sessionRoutes.js");
+const gameRoutes = require("./routes/game.route");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRoutes);
 app.use("/session", gameSessionRoutes);
+app.use("/game", gameRoutes);
 
 const PORT = process.env.PORT || 8080;
 

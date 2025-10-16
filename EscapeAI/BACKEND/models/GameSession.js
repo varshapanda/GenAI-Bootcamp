@@ -7,14 +7,9 @@ const gameSessionSchema = new Schema({
     ref: "User",
     required: true,
   },
-  gameId: {
-    type: String,
-    unique: true,
-    required: true,
-  },
   difficulty: {
     type: String,
-    enum: ["Easy", "Hard"],
+    enum: ["easy", "hard"],
     required: true,
   },
   theme: {
@@ -32,15 +27,14 @@ const gameSessionSchema = new Schema({
   rooms: [
     {
       type: Schema.Types.ObjectId,
+      timestamp: { type: Date, default: Date.now },
       ref: "Room",
     },
   ],
-  currentRoomIndex: {
-    type: Number,
-    default: 0,
+  currentRoom: {
+    type: Schema.Types.ObjectId,
+    ref: "Room",
   },
-  storyIntro: String,
-  currentNarrative: String,
   gameEnding: String,
 
   conversationHistory: [
@@ -51,15 +45,6 @@ const gameSessionSchema = new Schema({
       roomId: Schema.Types.ObjectId,
     },
   ],
-
-  adaptiveDifficulty: {
-    type: Number,
-    default: 1,
-  },
-  playerPerformanceScore: {
-    type: Number,
-    default: 50,
-  },
 
   status: {
     type: String,
@@ -78,14 +63,28 @@ const gameSessionSchema = new Schema({
     default: 0,
   },
 
-  totalPuzzlesSolved: {
+  totalWrongChoices: {
     type: Number,
     default: 0,
   },
-
-  totalAttempts: {
-    type: Number,
-    default: 0,
+  inventory: {
+    type: [
+      {
+        item_id: { type: String, required: true },
+        item_name: { type: String, required: true },
+        item_description: { type: String, required: true },
+      },
+    ],
+    default: undefined,
+  },
+  summary: {
+    escaped: { type: Boolean },
+    summary_text: { type: String },
+    rooms_completed: { type: Number },
+    wrong_attempts: { type: Number },
+    hints_used: { type: Number },
+    time_taken_seconds: { type: Number },
+    score: { type: Number },
   },
   createdAt: {
     type: Date,
