@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Signup from "./components/SignUp";
 import MainMenu from "./components/MainMenu";
 import Landing from "./components/LandingPage";
+import GameScreen from "./components/GameScreen";
 function App() {
   
   
@@ -15,6 +16,7 @@ function App() {
     <Route path="/Login" element={<LoginForm/>}/>
     <Route path='/signup' element={<Signup/>}/>
      <Route path="/Menu" element={<MainMenu/>}/>
+     <Route path="/GameScreen" element={<GameScreen/>}/>
   </Routes>
   </BrowserRouter>
   )
