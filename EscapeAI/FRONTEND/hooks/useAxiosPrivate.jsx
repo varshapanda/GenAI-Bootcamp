@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { axiosPrivate } from "../api/axios";
+import { axiosPrivate } from "../src/api/axios";
 
 const useAxiosPrivate = () => {
   useEffect(() => {
