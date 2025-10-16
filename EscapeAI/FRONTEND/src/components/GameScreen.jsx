@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; 
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function GameScreen() {
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate(); 
   const [inventory, setInventory] = useState([]);
   const [dialogue, setDialogue] = useState("Loading scenario...");
   const [options, setOptions] = useState([]);
@@ -51,6 +53,12 @@ function GameScreen() {
     }
   }
 
+  // Function to handle game end navigation (implement proper logic later)
+  function handleGameEnd(result) {
+    // TODO: Add actual game end logic here
+    navigate("/Result", { state: { result } }); 
+  }
+
   const mainSceneStyle = {
     backgroundImage: "url('/assets/your-ai-scene.jpg')",
     backgroundSize: "cover",
@@ -66,7 +74,15 @@ function GameScreen() {
       ></div>
       <div className="absolute inset-0 bg-[url('assets/robo2.png')] backdrop-blur-[1px]" />
 
-      {/* Inventory Panel (Modernized) */}
+      {/* Temporary Button - Top Right */}
+      <button
+        onClick={() => handleGameEnd("win")}
+        className="absolute top-5 right-5 px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg text-white text-xs tracking-widest shadow-md z-50"
+      >
+        Go To Result Page (TEMP)
+      </button>
+
+      {/* Inventory Panel */}
       <aside className="absolute top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0b0d16]/95 to-[#05070d]/90 border-r-4 border-orange-600/40 shadow-xl p-3 flex flex-col z-20">
         <h2 className="text-base mb-3 text-orange-400 tracking-widest">INVENTORY</h2>
         <div className="flex-1 overflow-auto space-y-2 pr-1">
