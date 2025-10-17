@@ -123,8 +123,7 @@ export default function Landing() {
 
             {/* CTA Button */}
             <div className="flex justify-center pt-4">
-              <a
-                href="/auth"
+              <Link to="/auth"
                 className="inline-block group relative overflow-hidden rounded-lg bg-gradient-to-r from-orange-600 to-red-600 p-0.5 transition-all duration-300 hover:from-orange-500 hover:to-red-500 shadow-lg hover:shadow-orange-500/50"
               >
                 <div className="relative bg-black rounded-lg px-10 py-5 flex items-center justify-center gap-3 transition-all duration-200 group-hover:bg-black/80">
@@ -134,7 +133,7 @@ export default function Landing() {
                   </span>
                   <ArrowRight className="w-6 h-6 text-orange-400 group-hover:translate-x-1 transition-all opacity-0 group-hover:opacity-100" />
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -300,8 +299,7 @@ export default function Landing() {
               Your first escape awaits. Enter the unknown and prove you have
               what it takes.
             </p>
-            <a
-              href="/auth"
+            <Link to="/auth"
               className="inline-block group relative overflow-hidden rounded-lg bg-gradient-to-r from-orange-600 to-red-600 p-0.5 transition-all duration-300 hover:from-orange-500 hover:to-red-500"
             >
               <div className="relative bg-black rounded-lg px-8 py-4 flex items-center justify-center gap-3 transition-all duration-200 group-hover:bg-black/80">
@@ -311,7 +309,7 @@ export default function Landing() {
                 </span>
                 <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-all" />
               </div>
-            </a>
+            </Link>
           </div>
         </div>
 
