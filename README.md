@@ -12,20 +12,21 @@ The platform includes the following key sections:
 
 ### 1. Landing Page
 
-![EscapeAI Landing Page Screenshot](./LandingPage.png)
+![EscapeAI Landing Page Screenshot](./EscapeAI/FRONTEND/src/assets/LandingPage.png)
 
 ### 2. Login Page
-![EscapeAI Login Page Screenshot](./LoginPage.png)
+![EscapeAI Login Page Screenshot](./EscapeAI/FRONTEND/src/assets/LoginPage.png)
 
 ### 3. Room Selection Page
-![EscapeAI Room Selection Page Screenshot](./RoomSelectionPage.png)
+![EscapeAI Room Selection Page Screenshot](./EscapeAI/FRONTEND/src/assets/RoomSelectionPage.png)
 
 ### 4. Game Screen
-![EscapeAI Game Screen Screenshot](./GameScreen.png)
+![EscapeAI Game Screen Screenshot](./EscapeAI/FRONTEND/src/assets/GameScreen.png)
 
 ### 5. Result Page
-![EscapeAI Result Page Screenshot](./ResultVictory.png)
-![EscapeAI Result Page Defeat Screenshot](./ResultDefeat.png)
+![EscapeAI Result Page Screenshot](./EscapeAI/FRONTEND/src/assets/ResultVictory.png)
+
+![EscapeAI Result Page Defeat Screenshot](./EscapeAI/FRONTEND/src/assets/ResultDefeat.png)
 
 
 ---
