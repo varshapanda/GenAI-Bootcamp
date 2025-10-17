@@ -60,6 +60,8 @@ const startGame = async (req, res) => {
     return res.status(200).json({
       sessionId: newSession._id,
       room: aiRoom,
+      roomType: roomType,
+      theme: theme,
     });
   } catch (err) {
     console.error("Start game error:", err);
@@ -181,6 +183,8 @@ const chooseOption = async (req, res) => {
         totalTimeTaken: session.totalTimeTaken,
       },
       gameEnding: session.gameEnding,
+      roomType: session.roomType,
+      theme: session.theme,
     });
   } catch (err) {
     console.error("Choose option error:", err);
