@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { axiosPrivate } from "../src/api/axios";
+import { useNavigate } from "react-router-dom";
 
 const useAxiosPrivate = () => {
+  const navigator = useNavigate();
   useEffect(() => {
     // Request interceptor: attach token if it exists in localStorage
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -22,6 +24,7 @@ const useAxiosPrivate = () => {
         // If 401: Unauthorized, you could redirect to login here
         if (error?.response?.status === 401) {
           console.warn("Unauthorized! Redirecting to login...");
+          navigator("/auth");
         }
 
         // If 403: Forbidden

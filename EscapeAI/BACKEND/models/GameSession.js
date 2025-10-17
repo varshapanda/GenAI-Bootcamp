@@ -9,7 +9,7 @@ const gameSessionSchema = new Schema({
   },
   difficulty: {
     type: String,
-    enum: ["easy", "hard"],
+    enum: ["easy", "medium", "hard"],
     required: true,
   },
   theme: {
@@ -35,7 +35,8 @@ const gameSessionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Room",
   },
-  gameEnding: String,
+
+  gameEnding: { type: String, default: "continue" },
 
   conversationHistory: [
     {

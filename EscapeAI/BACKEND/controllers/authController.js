@@ -1,16 +1,16 @@
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
-const User = require('../models/User.js');
+const jwt = require("jsonwebtoken");
+const axios = require("axios");
+const User = require("../models/User.js");
 
 const generateAccessToken = (userId) => {
   return jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '15m'
+    expiresIn: "7d",
   });
 };
 
 const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '7d'
+    expiresIn: "7d",
   });
 };
 
@@ -32,11 +32,11 @@ const googleLogin = async (req, res) => {
       }
     );
 
-    const { email, name} = googleRes.data;
+    const { email, name } = googleRes.data;
 
     if (!email) {
-      return res.status(400).json({ 
-        message: "Failed to retrieve Google user info" 
+      return res.status(400).json({
+        message: "Failed to retrieve Google user info",
       });
     }
     let user = await User.findOne({ email });
@@ -57,7 +57,7 @@ const googleLogin = async (req, res) => {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "None",
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
     });
 
     return res.status(200).json({
@@ -65,13 +65,13 @@ const googleLogin = async (req, res) => {
       user: {
         _id: user._id,
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Google OAuth login error:", error.message);
-    return res.status(401).json({ 
-      message: "Google login failed. Please try again." 
+    return res.status(401).json({
+      message: "Google login failed. Please try again.",
     });
   }
 };
@@ -99,7 +99,7 @@ const refreshToken = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-      }
+      },
     });
   } catch (error) {
     return res.status(403).json({ message: "Invalid refresh token" });
@@ -125,7 +125,7 @@ const logout = async (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "None",
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
     });
 
     return res.status(200).json({ message: "Logged out successfully" });
@@ -133,17 +133,17 @@ const logout = async (req, res) => {
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "None",
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
     });
-    
+
     return res.status(200).json({ message: "Logged out successfully" });
   }
 };
 
 const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select('-refreshToken');
-    
+    const user = await User.findById(req.userId).select("-refreshToken");
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -153,7 +153,7 @@ const getMe = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-      }
+      },
     });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
@@ -164,5 +164,5 @@ module.exports = {
   googleLogin,
   refreshToken,
   logout,
-  getMe
+  getMe,
 };

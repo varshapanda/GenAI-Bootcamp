@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosPrivate } from "../api/axios";
-
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { Loader2, AlertCircle } from "lucide-react";
 
 function RoomSelection() {
+  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     difficulty: "",
     theme: "",
@@ -18,21 +21,32 @@ function RoomSelection() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8080/game/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      if (
+        !formData.difficulty ||
+        !formData.theme ||
+        !formData.roomType ||
+        !formData.numberOfRooms
+      ) {
+        setError("Please fill in all fields before starting the game.");
+        setLoading(false);
+        return;
+      }
 
-      const data = await res.json();
-      console.log("Backend response:", data);
+      const res = await axiosPrivate.post("/game/start", formData);
+
+      console.log("Backend response:", res.data);
+      setError(null);
 
       // Pass data to GameScreen
-      navigate("/GameScreen", { state: { sessionData: data } });
+      navigate("/GameScreen", { state: { sessionData: res.data } });
     } catch (err) {
       console.error("Failed to start game session:", err);
+      setError("Failed to start game. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,9 +85,9 @@ function RoomSelection() {
               required
             >
               <option value="">Select</option>
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
             </select>
           </div>
 
@@ -134,13 +148,15 @@ function RoomSelection() {
             >
               <option value="">Select</option>
               <option value="2">2</option>
-              <option value="3-4">3-4</option>
-              <option value="5+">5+</option>
+              <option value="4">3-4</option>
+              <option value="6">5+</option>
             </select>
           </div>
 
           {/* Generate Adventure Button */}
           <button
+            onClick={handleSubmit}
+            disabled={loading}
             type="submit"
             className="w-full mt-4 relative overflow-hidden rounded-md font-semibold text-lg tracking-wider text-orange-400
                        border border-orange-500 p-3 transition-all duration-300
@@ -148,10 +164,33 @@ function RoomSelection() {
                        shadow-[0_0_20px_rgba(255,140,0,0.5)]
                        hover:shadow-[0_0_30px_rgba(255,165,0,0.9)] hover:scale-105"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/20 to-transparent
-                             transform -translate-x-full hover:translate-x-full transition-transform duration-700 pointer-events-none"></span>
-            <span className="relative z-10">Generate Adventure</span>
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/20 to-transparent
+                             transform -translate-x-full hover:translate-x-full transition-transform duration-700 pointer-events-none"
+            ></span>
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                "Generate Adventure"
+              )}
+            </span>
           </button>
+          {/* Error Message */}
+          {error && (
+            <div
+              className="mt-3 p-3 rounded-md border border-red-500/50 bg-gradient-to-r from-red-950/30 via-red-900/20 to-red-950/30
+                  shadow-[0_0_15px_rgba(239,68,68,0.3)] animate-pulse"
+            >
+              <div className="flex items-center gap-2 text-red-400">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span className="text-sm font-medium">{error}</span>
+              </div>
+            </div>
+          )}
         </form>
       </div>
 
@@ -164,47 +203,71 @@ function RoomSelection() {
             Welcome, Adventurer
           </h1>
           <div className="text-gray-300 text-sm space-y-2">
-            <p>Customize your escape room experience using the left panel options.</p>
-            <p>Select difficulty, theme, room type, and number of rooms to generate a unique AI-crafted adventure.</p>
-            <p>Each room is filled with puzzles, riddles, and challenges to test your wits and observation.</p>
+            <p>
+              Customize your escape room experience using the left panel
+              options.
+            </p>
+            <p>
+              Select difficulty, theme, room type, and number of rooms to
+              generate a unique AI-crafted adventure.
+            </p>
+            <p>
+              Each room is filled with puzzles, riddles, and challenges to test
+              your wits and observation.
+            </p>
             <p>Time is precious, clues are limited, and teamwork is key!</p>
-            <p>Prepare to solve, explore, and escape. Your journey begins now…</p>
+            <p>
+              Prepare to solve, explore, and escape. Your journey begins now…
+            </p>
           </div>
         </div>
 
         {/* Floating Glowing Orbs */}
         {[...Array(12)].map((_, i) => (
-          <div key={i} className="absolute rounded-full bg-orange-400/30 blur-xl animate-floatSlow" style={{
-            width: `${Math.random() * 30 + 10}px`,
-            height: `${Math.random() * 30 + 10}px`,
-            top: `${Math.random() * 80}%`,
-            left: `${Math.random() * 80}%`,
-          }} />
+          <div
+            key={i}
+            className="absolute rounded-full bg-orange-400/30 blur-xl animate-floatSlow"
+            style={{
+              width: `${Math.random() * 30 + 10}px`,
+              height: `${Math.random() * 30 + 10}px`,
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 80}%`,
+            }}
+          />
         ))}
 
         {/* Realistic Gears */}
         {gearPositions.map((gear, i) => (
-          <div key={i} className="absolute" style={{
-            width: `${gear.size}px`,
-            height: `${gear.size}px`,
-            top: gear.top,
-            left: gear.left,
-            borderRadius: "50%",
-            border: "3px solid rgba(255,165,0,0.5)",
-            boxSizing: "border-box",
-            clipPath: "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)",
-            animation: `spin ${gear.speed}s linear infinite`,
-          }} />
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              width: `${gear.size}px`,
+              height: `${gear.size}px`,
+              top: gear.top,
+              left: gear.left,
+              borderRadius: "50%",
+              border: "3px solid rgba(255,165,0,0.5)",
+              boxSizing: "border-box",
+              clipPath:
+                "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)",
+              animation: `spin ${gear.speed}s linear infinite`,
+            }}
+          />
         ))}
 
         {/* Tiny Spark Particles */}
         {[...Array(30)].map((_, i) => (
-          <div key={i} className="absolute w-1 h-1 bg-orange-400 rounded-full animate-pulseGlow" style={{
-            top: `${Math.random() * 90 + 5}%`,
-            left: `${Math.random() * 90 + 5}%`,
-            animationDuration: `${Math.random() * 3 + 2}s`,
-            animationDelay: `${Math.random() * 2}s`,
-          }} />
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-orange-400 rounded-full animate-pulseGlow"
+            style={{
+              top: `${Math.random() * 90 + 5}%`,
+              left: `${Math.random() * 90 + 5}%`,
+              animationDuration: `${Math.random() * 3 + 2}s`,
+              animationDelay: `${Math.random() * 2}s`,
+            }}
+          />
         ))}
 
         {/* Central Glowing Portal */}

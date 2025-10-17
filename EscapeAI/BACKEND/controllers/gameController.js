@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const GameSession = require("../models/GameSession");
 const Room = require("../models/Room");
 const { generateInitialRoom } = require("../services/ai/initialRoom");
@@ -195,10 +196,13 @@ const chooseOption = async (req, res) => {
 const getGameSummary = async (req, res) => {
   try {
     const { sessionId } = req.params;
-    console.log("Generating summary for session:", sessionId);
     const userId = req.userId;
 
     if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
+
+    if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+      return res.status(400).json({ error: "Invalid sessionId format" });
+    }
 
     const session = await GameSession.findOne({ _id: sessionId, userId })
       .populate("rooms")
@@ -208,29 +212,31 @@ const getGameSummary = async (req, res) => {
     if (session.status !== "completed")
       return res.status(400).json({ error: "Game is not yet completed" });
 
-    const sessionState = {
-      rooms: session.rooms.map((room) => room.room_id || room._id),
-      inventory: session.inventory || [],
-      totalHintsUsed: session.totalHintsUsed || 0,
-      totalWrongChoices: session.totalWrongChoices || 0,
-      totalTimeTaken: session.totalTimeTaken || 0,
-    };
+    if (!session.summary || !session.summary.summary_text) {
+      const sessionState = {
+        rooms: session.rooms.map((room) => room.room_id || room._id),
+        inventory: session.inventory || [],
+        totalHintsUsed: session.totalHintsUsed || 0,
+        totalWrongChoices: session.totalWrongChoices || 0,
+        totalTimeTaken: session.totalTimeTaken || 0,
+      };
 
-    const aiSummary = await generateSummary({ sessionState });
+      const aiSummary = await generateSummary({ sessionState });
 
-    // Save summary in session
-    session.summary = {
-      escaped: session.summary?.escaped || false,
-      summary_text: aiSummary.summary_text,
-      rooms_completed: aiSummary.rooms_completed,
-      wrong_attempts: aiSummary.wrong_attempts,
-      hints_used: aiSummary.hints_used,
-      time_taken_seconds: aiSummary.time_taken_seconds,
-      score: aiSummary.score,
-    };
-    session.summaryGeneratedAt = new Date();
+      // Save summary in session
+      session.summary = {
+        escaped: session.summary?.escaped || false,
+        summary_text: aiSummary.summary_text,
+        rooms_completed: aiSummary.rooms_completed,
+        wrong_attempts: aiSummary.wrong_attempts,
+        hints_used: aiSummary.hints_used,
+        time_taken_seconds: aiSummary.time_taken_seconds,
+        score: aiSummary.score,
+      };
+      session.summaryGeneratedAt = new Date();
 
-    await session.save();
+      await session.save();
+    }
 
     return res.status(200).json({
       sessionId: session._id,
@@ -242,8 +248,35 @@ const getGameSummary = async (req, res) => {
   }
 };
 
+const getCurrentSession = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const session = await GameSession.findOne({ userId })
+      .sort({ createdAt: -1 }) // sort by newest first
+      .populate("currentRoom");
+
+    if (!session) return res.status(404).json({ error: "Session not found" });
+
+    return res.status(200).json({
+      sessionId: session._id,
+      currentRoom: session.currentRoom,
+      inventory: session.inventory,
+      status: session.status,
+      roomType: session.roomType,
+      theme: session.theme,
+    });
+  } catch (err) {
+    console.error("Get current session error:", err);
+    return res
+      .status(500)
+      .json({ error: "Failed to retrieve current session" });
+  }
+};
+
 module.exports = {
   startGame,
   chooseOption,
   getGameSummary,
+  getCurrentSession,
 };
