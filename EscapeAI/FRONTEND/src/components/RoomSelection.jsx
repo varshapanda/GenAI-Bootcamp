@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { axiosPrivate } from "../api/axios";
+
 
 function RoomSelection() {
   const navigate = useNavigate();
@@ -14,12 +16,24 @@ function RoomSelection() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //add back end code here
-    console.log("Sending to backend:", formData);
-    navigate("/GameScreen");
+
+    try {
+      const res = await fetch("http://localhost:8080/game/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      console.log("Backend response:", data);
+
+      // Pass data to GameScreen
+      navigate("/GameScreen", { state: { sessionData: data } });
+    } catch (err) {
+      console.error("Failed to start game session:", err);
+    }
   };
 
   const gearPositions = [
@@ -35,7 +49,6 @@ function RoomSelection() {
 
   return (
     <div className="min-h-screen flex bg-[url('assets/robo2.png')] bg-cover bg-center text-white overflow-hidden">
-
       {/* LEFT PANEL */}
       <div className="w-full md:w-1/3 bg-[#0a0f24]/80 backdrop-blur-lg p-8 flex flex-col justify-center animate-slideInLeft shadow-2xl border-r-2 border-orange-500 relative overflow-hidden group">
         <div className="absolute inset-0 bg-white/5 pointer-events-none transform -rotate-12 scale-125 opacity-0 group-hover:opacity-20 transition-opacity duration-700 animate-shine"></div>
@@ -146,7 +159,6 @@ function RoomSelection() {
       <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center animate-slideInRight">
         <div className="absolute inset-0 bg-black/60 z-0"></div>
 
-        {/* Central Info Container */}
         <div className="relative z-10 flex flex-col items-center text-center max-w-lg p-8 bg-[#0a0f24]/80 backdrop-blur-md rounded-2xl border-2 border-orange-500 animate-float transition-colors duration-300 hover:bg-[#0a0f24]/95 group">
           <h1 className="text-4xl font-bold text-orange-400/90 mb-2 drop-shadow-[0_0_8px_rgba(255,140,0,0.5)]">
             Welcome, Adventurer

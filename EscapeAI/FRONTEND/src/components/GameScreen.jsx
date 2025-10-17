@@ -10,6 +10,25 @@ function GameScreen() {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // UI-only states
+  const [timer, setTimer] = useState(0); // elapsed time in seconds
+  const [score, setScore] = useState(0);
+  const [hint, setHint] = useState("");
+  const [currentRoom, setCurrentRoom] = useState(1);
+  const [totalRooms, setTotalRooms] = useState(5);
+
+  // Elapsed timer effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(prev => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const formattedTimer = `${Math.floor(timer / 60)
+    .toString()
+    .padStart(2,'0')}:${(timer % 60).toString().padStart(2,'0')}`;
+
   useEffect(() => {
     fetchGameState();
   }, []);
@@ -53,9 +72,7 @@ function GameScreen() {
     }
   }
 
-  // Function to handle game end navigation (implement proper logic later)
   function handleGameEnd(result) {
-    // TODO: Add actual game end logic here
     navigate("/Result", { state: { result } }); 
   }
 
@@ -97,13 +114,50 @@ function GameScreen() {
               <div className="w-6 h-6 flex items-center justify-center bg-gradient-to-b from-orange-500/80 to-orange-700/60 rounded-sm text-xs font-bold">
                 {item.charAt(0)}
               </div>
-              <div className="text-xs md:text-sm truncate">{item}</div>
+              <div className="text-sm md:text-base truncate">{item}</div>
             </div>
           ))}
         </div>
         <button className="mt-4 py-1.5 text-xs bg-gradient-to-r from-[#111827] to-[#1f2937] border border-orange-400/20 rounded hover:from-[#1f2937] hover:to-[#111827]">
           Save / Load
         </button>
+
+        {/* Timer, Score, Hint */}
+        <div className="mt-4 flex flex-col gap-3">
+          {/* Timer */}
+          <div className="flex justify-between items-center px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-400 rounded-lg shadow-md text-base text-black font-bold tracking-widest hover:scale-105 animate-glow-soft transition-all duration-200">
+            <span>⏱ Timer:</span>
+            <span>{formattedTimer}</span>
+          </div>
+
+          {/* Score */}
+          <div className="flex justify-between items-center px-5 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-md text-base text-black font-bold tracking-widest hover:scale-105 animate-glow-soft transition-all duration-200">
+            <span>🏆 Score:</span>
+            <span>{score}</span>
+          </div>
+
+          {/* Hint Button */}
+          <button
+            onClick={() => setHint("This is your hint!")}
+            className="w-full py-3 text-base bg-gradient-to-r from-orange-500 to-yellow-400 text-black font-bold rounded-lg shadow-md hover:from-yellow-400 hover:to-orange-500 hover:scale-105 animate-glow-soft transition-all duration-200"
+          >
+            💡 Show Hint
+          </button>
+
+          {/* Hint Text */}
+          <div className="text-yellow-300 text-base mt-2 px-2">{hint}</div>
+
+          {/* Room Progress Bar */}
+          <div className="mt-4">
+            <div className="text-sm text-gray-400 mb-1 font-bold">Room {currentRoom} / {totalRooms}</div>
+            <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-3 bg-orange-500 rounded-full transition-all duration-500 animate-glow-soft"
+                style={{ width: `${(currentRoom / totalRooms) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Center Scene */}
@@ -137,7 +191,7 @@ function GameScreen() {
                     key={opt.id}
                     onClick={() => handleOptionClick(opt)}
                     style={{ animationDelay: `${index * 0.1}s` }}
-                    className="text-base py-3 px-5 bg-gradient-to-br from-[#1a1d2b]/90 to-[#2a2e44]/90 border border-orange-400/50 rounded-lg shadow-md hover:scale-[1.06] hover:border-orange-300 hover:shadow-[0_0_20px_rgba(255,140,0,0.45)] transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-orange-400 animate-option-pop opacity-0"
+                    className="text-lg py-4 px-6 bg-gradient-to-br from-[#1a1d2b]/90 to-[#2a2e44]/90 border border-orange-400/50 rounded-lg shadow-md hover:scale-[1.06] hover:border-orange-300 hover:shadow-[0_0_20px_rgba(255,140,0,0.45)] transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-orange-400 animate-option-pop opacity-0"
                   >
                     {opt.text}
                   </button>
@@ -174,6 +228,14 @@ function GameScreen() {
         }
         .animate-option-pop {
           animation: option-pop 0.4s ease-out forwards;
+        }
+
+        @keyframes glowPulseSoft {
+          0%, 100% { box-shadow: 0 0 6px rgba(255,165,0,0.4), 0 0 12px rgba(255,200,0,0.2); }
+          50% { box-shadow: 0 0 12px rgba(255,165,0,0.5), 0 0 18px rgba(255,200,0,0.3); }
+        }
+        .animate-glow-soft {
+          animation: glowPulseSoft 2s infinite ease-in-out;
         }
       `}</style>
     </div>
