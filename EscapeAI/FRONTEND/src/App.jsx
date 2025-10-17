@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Landing from "./components/LandingPage";
 import GoogleAuth from "./components/authentication/Auth";
 import RoomSelection from "./components/RoomSelection";
@@ -7,7 +7,6 @@ import Result from "./components/Result";
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<GoogleAuth />} />
@@ -15,7 +14,6 @@ function App() {
         <Route path="/GameScreen" element={<GameScreen />} />
         <Route path="/Result/:sessionId" element={<Result />} />
       </Routes>
-    </BrowserRouter>
   );
 }
 
