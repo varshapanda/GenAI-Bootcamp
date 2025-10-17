@@ -7,8 +7,7 @@ const { generateSummary } = require("../services/ai/summary");
 const startGame = async (req, res) => {
   try {
     const { difficulty, theme, roomType, numberOfRooms } = req.body;
-    // const userId = req.userId;
-    const userId = "67b71742a5dd77c4a93a0018"; // temp for testing
+    const userId = req.userId;
 
     // Basic validation
     if (!difficulty || !theme || !roomType || !numberOfRooms) {
@@ -71,8 +70,7 @@ const startGame = async (req, res) => {
 const chooseOption = async (req, res) => {
   try {
     const { sessionId, selectedOptionId, timeTaken, hintUsed } = req.body;
-    // const userId = req.userId; // assuming auth middleware
-    const userId = "67b71742a5dd77c4a93a0018"; // temp for testing
+    const userId = req.userId; // assuming auth middleware
 
     if (!sessionId || !selectedOptionId) {
       return res.status(400).json({ error: "Missing required fields" });
@@ -194,8 +192,7 @@ const getGameSummary = async (req, res) => {
   try {
     const { sessionId } = req.params;
     console.log("Generating summary for session:", sessionId);
-    // const userId = req.userId;
-    const userId = "67b71742a5dd77c4a93a0018";
+    const userId = req.userId;
 
     if (!sessionId) return res.status(400).json({ error: "Missing sessionId" });
 

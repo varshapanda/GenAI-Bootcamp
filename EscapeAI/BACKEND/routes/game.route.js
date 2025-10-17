@@ -7,7 +7,7 @@ const {
   getGameSummary,
 } = require("../controllers/gameController");
 
-router.post("/start", startGame);
-router.post("/choose", chooseOption);
-router.post("/summary/:sessionId", getGameSummary);
+router.post("/start", authMiddleware, startGame);
+router.post("/choose", authMiddleware, chooseOption);
+router.post("/summary/:sessionId", authMiddleware, getGameSummary);
 module.exports = router;
