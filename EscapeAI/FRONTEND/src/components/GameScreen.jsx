@@ -19,16 +19,13 @@ function GameScreen() {
 
   // Elapsed timer effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer(prev => prev + 1);
-    }, 1000);
+    const interval = setInterval(() => setTimer(prev => prev + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const formattedTimer = `${Math.floor(timer / 60)
-    .toString()
-    .padStart(2,'0')}:${(timer % 60).toString().padStart(2,'0')}`;
+  const formattedTimer = `${Math.floor(timer / 60).toString().padStart(2,'0')}:${(timer % 60).toString().padStart(2,'0')}`;
 
+  // Fetch initial game state
   useEffect(() => {
     fetchGameState();
   }, []);
@@ -38,9 +35,14 @@ function GameScreen() {
       setLoading(true);
       const res = await axiosPrivate.get("/api/game/start");
       const data = res.data;
-      setDialogue(data.dialogue);
+
+      setDialogue(data.dialogue || "...");
       setOptions(data.options || []);
       setInventory(data.inventory || []);
+      setScore(data.score || 0);
+      setCurrentRoom(data.currentRoom || 1);
+      setTotalRooms(data.totalRooms || 5);
+      setHint(""); // clear hint
     } catch (err) {
       console.error("Error fetching game state:", err);
       setDialogue("⚠️ Failed to load the scenario. Please refresh.");
@@ -49,6 +51,7 @@ function GameScreen() {
     }
   }
 
+  // Handle choice selection
   async function handleOptionClick(opt) {
     try {
       setLoading(true);
@@ -57,12 +60,27 @@ function GameScreen() {
         choiceText: opt.text,
       });
       const data = res.data;
-      setDialogue(data.dialogue);
+
+      // Update dialogue, options
+      setDialogue(data.dialogue || dialogue);
       setOptions(data.options || []);
+
+      // Add item if returned
       if (data.addItem) {
-        setInventory((prev) =>
-          prev.includes(data.addItem) ? prev : [...prev, data.addItem]
-        );
+        setInventory(prev => prev.includes(data.addItem) ? prev : [...prev, data.addItem]);
+      }
+
+      // Update score, current room, totalRooms
+      if (data.score !== undefined) setScore(data.score);
+      if (data.currentRoom !== undefined) setCurrentRoom(data.currentRoom);
+      if (data.totalRooms !== undefined) setTotalRooms(data.totalRooms);
+
+      // Update hint if provided
+      if (data.hint) setHint(data.hint);
+
+      // Check if game ended
+      if (data.gameEnd) {
+        navigate("/Result", { state: { result: data.result || "win", score, time: formattedTimer } });
       }
     } catch (err) {
       console.error("Error sending choice:", err);
@@ -72,8 +90,8 @@ function GameScreen() {
     }
   }
 
-  function handleGameEnd(result) {
-    navigate("/Result", { state: { result } }); 
+  function handleShowHint() {
+    setHint("This is your hint!");
   }
 
   const mainSceneStyle = {
@@ -91,21 +109,11 @@ function GameScreen() {
       ></div>
       <div className="absolute inset-0 bg-[url('assets/robo2.png')] backdrop-blur-[1px]" />
 
-      {/* Temporary Button - Top Right */}
-      <button
-        onClick={() => handleGameEnd("win")}
-        className="absolute top-5 right-5 px-4 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg text-white text-xs tracking-widest shadow-md z-50"
-      >
-        Go To Result Page (TEMP)
-      </button>
-
       {/* Inventory Panel */}
       <aside className="absolute top-0 left-0 h-full w-64 bg-gradient-to-b from-[#0b0d16]/95 to-[#05070d]/90 border-r-4 border-orange-600/40 shadow-xl p-3 flex flex-col z-20">
         <h2 className="text-base mb-3 text-orange-400 tracking-widest">INVENTORY</h2>
         <div className="flex-1 overflow-auto space-y-2 pr-1">
-          {inventory.length === 0 && (
-            <div className="text-xs text-gray-500">— Empty —</div>
-          )}
+          {inventory.length === 0 && <div className="text-xs text-gray-500">— Empty —</div>}
           {inventory.map((item) => (
             <div
               key={item}
@@ -118,33 +126,23 @@ function GameScreen() {
             </div>
           ))}
         </div>
-        <button className="mt-4 py-1.5 text-xs bg-gradient-to-r from-[#111827] to-[#1f2937] border border-orange-400/20 rounded hover:from-[#1f2937] hover:to-[#111827]">
-          Save / Load
-        </button>
 
         {/* Timer, Score, Hint */}
         <div className="mt-4 flex flex-col gap-3">
-          {/* Timer */}
           <div className="flex justify-between items-center px-5 py-3 bg-gradient-to-r from-orange-500 to-yellow-400 rounded-lg shadow-md text-base text-black font-bold tracking-widest hover:scale-105 animate-glow-soft transition-all duration-200">
             <span>⏱ Timer:</span>
             <span>{formattedTimer}</span>
           </div>
-
-          {/* Score */}
           <div className="flex justify-between items-center px-5 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-md text-base text-black font-bold tracking-widest hover:scale-105 animate-glow-soft transition-all duration-200">
             <span>🏆 Score:</span>
             <span>{score}</span>
           </div>
-
-          {/* Hint Button */}
           <button
-            onClick={() => setHint("This is your hint!")}
+            onClick={handleShowHint}
             className="w-full py-3 text-base bg-gradient-to-r from-orange-500 to-yellow-400 text-black font-bold rounded-lg shadow-md hover:from-yellow-400 hover:to-orange-500 hover:scale-105 animate-glow-soft transition-all duration-200"
           >
             💡 Show Hint
           </button>
-
-          {/* Hint Text */}
           <div className="text-yellow-300 text-base mt-2 px-2">{hint}</div>
 
           {/* Room Progress Bar */}
@@ -226,17 +224,13 @@ function GameScreen() {
           60% { transform: scale(1.05); opacity: 1; }
           100% { transform: scale(1); opacity: 1; }
         }
-        .animate-option-pop {
-          animation: option-pop 0.4s ease-out forwards;
-        }
+        .animate-option-pop { animation: option-pop 0.4s ease-out forwards; }
 
         @keyframes glowPulseSoft {
           0%, 100% { box-shadow: 0 0 6px rgba(255,165,0,0.4), 0 0 12px rgba(255,200,0,0.2); }
           50% { box-shadow: 0 0 12px rgba(255,165,0,0.5), 0 0 18px rgba(255,200,0,0.3); }
         }
-        .animate-glow-soft {
-          animation: glowPulseSoft 2s infinite ease-in-out;
-        }
+        .animate-glow-soft { animation: glowPulseSoft 2s infinite ease-in-out; }
       `}</style>
     </div>
   );
