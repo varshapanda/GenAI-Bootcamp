@@ -1,5 +1,9 @@
 # EscapeAI: The AI-Powered Escape Room Experience
 
+## Live Demo
+- **Frontend:** https://escapeai-smoky.vercel.app/
+- **Backend:** https://escapeai.onrender.com
+
 ## Overview
 EscapeAI is an immersive, story-driven escape room experience that uses artificial intelligence to create dynamic storylines and personalized challenges.  Every player’s journey is unique, shaped by their decisions and the AI’s storytelling.
 
