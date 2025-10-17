@@ -14,14 +14,14 @@ const ResultMessage = ({ message, onComplete }) => {
     // Hide after 4 seconds
     const hideTimer = setTimeout(() => {
       setIsVisible(false);
-    }, 3000);
+    }, 4000);
 
     // Call onComplete after fade-out animation (500ms)
     const completeTimer = setTimeout(() => {
       if (onComplete) {
         onComplete();
       }
-    }, 3500); // 4000ms display + 500ms fade-out
+    }, 4500); // 4000ms display + 500ms fade-out
 
     return () => {
       clearTimeout(hideTimer);

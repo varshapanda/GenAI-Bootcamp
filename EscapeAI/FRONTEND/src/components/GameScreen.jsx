@@ -52,7 +52,7 @@ function GameScreen() {
       }
 
       setResultMessage(
-        data.currentRoom.result_message || "Welcome to the adventure!"
+        data?.currentRoom?.result_message || "Welcome to the adventure!"
       );
       setSessionId(data.sessionId);
       setDialogue(data.currentRoom.room_description || "...");
@@ -90,7 +90,7 @@ function GameScreen() {
 
       if (data.gameEnding !== "continue") {
         console.log("Game ended with:", data);
-        setResultMessage(data.currentRoom.result_message || "The End.");
+        setResultMessage(data?.room?.result_message || "The End.");
         setTimeout(() => {
           navigate(`/Result/${sessionId}`);
         }, 2000);
@@ -98,7 +98,7 @@ function GameScreen() {
         return;
       }
 
-      setResultMessage(data.room.result_message || "Choice made!");
+      setResultMessage(data?.room?.result_message || "Choice made!");
     } catch (err) {
       console.error("Error sending choice:", err);
       setDialogue("⚠️ Something went wrong while processing your action.");
