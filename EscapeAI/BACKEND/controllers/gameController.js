@@ -4,6 +4,7 @@ const Room = require("../models/Room");
 const { generateInitialRoom } = require("../services/ai/initialRoom");
 const { generateNextRoom } = require("../services/ai/nextRoom");
 const { generateSummary } = require("../services/ai/summary");
+const { generateStoryPlan } = require("../services/ai/storyPlan");
 
 const startGame = async (req, res) => {
   try {
@@ -15,12 +16,21 @@ const startGame = async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // Generate the Story Plan
+    const storyPlan = await generateStoryPlan({
+      theme,
+      difficulty,
+      numRoomsGoal: numberOfRooms,
+      roomType,
+    });
+
     // Step 1: Call AI to generate initial room
     const aiRoom = await generateInitialRoom({
       theme,
       difficulty,
       numRoomsGoal: numberOfRooms,
       hintMode: true, // optional, can be dynamic
+      storyPlan,
     });
 
     // Step 2: Creat a new room
@@ -41,6 +51,7 @@ const startGame = async (req, res) => {
       theme,
       roomType,
       numberOfRooms,
+      storyPlan,
       rooms: [],
       currentRoom: newRoom._id,
       conversationHistory: [
@@ -117,6 +128,8 @@ const chooseOption = async (req, res) => {
     if (typeof timeTaken === "number") {
       session.totalTimeTaken = (session.totalTimeTaken || 0) + timeTaken;
     }
+
+    session.currentRoomIndex += 1;
 
     await session.save();
 

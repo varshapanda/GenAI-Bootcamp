@@ -38,6 +38,12 @@ const gameSessionSchema = new Schema({
 
   gameEnding: { type: String, default: "continue" },
 
+  storyPlan: {
+    type: Array,
+  },
+
+  currentRoomIndex: { type: Number, default: 0 },
+
   conversationHistory: [
     {
       role: String,

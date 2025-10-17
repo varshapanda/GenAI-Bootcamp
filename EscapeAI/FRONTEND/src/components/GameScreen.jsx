@@ -93,7 +93,7 @@ function GameScreen() {
         setResultMessage(data?.room?.result_message || "The End.");
         setTimeout(() => {
           navigate(`/Result/${sessionId}`);
-        }, 2000);
+        }, 4000);
 
         return;
       }

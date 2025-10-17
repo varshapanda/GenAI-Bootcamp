@@ -38,6 +38,7 @@ const generateInitialRoom = async ({
   difficulty,
   numRoomsGoal,
   hintMode,
+  storyPlan,
 }) => {
   const prompt = `
  SYSTEM:
@@ -105,7 +106,12 @@ REQUIREMENTS:
 - No text outside of JSON.
 
 USER:
-Generate the initial room for a single-player MCQ escape-room game.
+Start the escape room adventure using this story outline:
+${JSON.stringify(storyPlan, null, 2)}
+
+Generate the first room (index 0) only.
+Make sure the story aligns with the first goal and summary.
+Keep all text brief and engaging.
 
 Game preferences:
 theme: ${theme}

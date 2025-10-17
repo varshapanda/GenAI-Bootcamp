@@ -54,6 +54,12 @@ SCHEMA (every key and value must follow these exact types):
 
 
 Rules:
+- Follow the predefined story plan to stay coherent.
+- The game must end by room #${sessionState.numberOfRooms}.
+- If this is the last planned room, set "end_condition" to "escaped" or "failed".
+- If player went off track, you may generate one bonus room (max ${
+    sessionState.numberOfRooms + 1
+  } total).
 - Interpret the player's choice and determine immediate result.
 - Only set "end_condition" to "escaped" or "failed" if the player's latest chosen option leads directly to that outcome.
 - If the current room contains such options but the player hasn't chosen them yet, keep "end_condition": "continue".
@@ -73,7 +79,9 @@ USER:
 Continue the MCQ escape-room story based on the following current game state and the player's chosen option.
 
 Game state (JSON):
-{  "theme": "${sessionState.theme}",
+{  Story plan: ${JSON.stringify(sessionState.storyPlan, null, 2)},
+  Current room index: ${sessionState.currentRoomIndex}
+"theme": "${sessionState.theme}",
   "difficulty": "${sessionState.difficulty}",
   "current_room"${
     sessionState.currentRoom

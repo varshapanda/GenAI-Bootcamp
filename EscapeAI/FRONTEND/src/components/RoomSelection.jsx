@@ -171,7 +171,10 @@ function RoomSelection() {
             <span className="relative z-10 flex items-center justify-center gap-2">
               {loading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2
+                    className="w-5 h-5"
+                    style={{ animation: "spin 1s linear infinite" }}
+                  />
                   Generating...
                 </>
               ) : (
