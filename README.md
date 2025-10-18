@@ -162,6 +162,11 @@ All AI responses are JSON-validated before being stored in MongoDB.
 - Leaderboards and performance-based achievements.
 - Advanced memory-based AI story continuity across sessions.
 
+## Contributors
+- Nidhish Agarwal
+- Yash Kanwar
+- Varsha Vijayashwini Panda
+
 
 
 
