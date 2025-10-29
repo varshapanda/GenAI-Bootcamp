@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "../../api/axios";
 import { Chrome, ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const GoogleAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -112,7 +112,7 @@ const GoogleAuth = () => {
               {/* Info */}
               <div className="space-y-2 text-center text-xs text-slate-400">
                 <p className="leading-relaxed">
-                  By continuing, you agree to our <span className="text-orange-400 hover:text-orange-300 cursor-pointer transition-colors">Terms</span> and <span className="text-orange-400 hover:text-orange-300 cursor-pointer transition-colors">Privacy Policy</span>
+                  By continuing, you agree to our <Link to="/terms" className="text-orange-400 hover:text-orange-300 cursor-pointer transition-colors">Terms</Link> and <Link to="/privacy" className="text-orange-400 hover:text-orange-300 cursor-pointer transition-colors">Privacy Policy</Link>
                 </p>
               </div>
 
